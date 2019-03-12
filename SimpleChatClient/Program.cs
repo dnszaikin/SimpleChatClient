@@ -58,7 +58,7 @@ namespace SimpleChatClient
 
         static void Main(string[] args)
         {
-            MyChatClient("localhost", 8181, "Hi chat! I'm a new user!");
+            MyChatClient("localhost", 8181, "Hi chat!  I'm a new user!");
         }
     }
 }
