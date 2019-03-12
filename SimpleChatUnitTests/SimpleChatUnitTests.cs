@@ -10,18 +10,10 @@ namespace SimpleChatUnitTests
     {
         [TestMethod]
         [ExpectedException(typeof(SocketException))]
-        public void TestConnectionNotValidEndpoint()
+        public void Test_Connecting_To_Bad_Server()
         {
             Program p = new Program();
-            Program.MyChatClient("localhost",8080,"Test");
+            Program.MyChatClient("localhost_doesnot_exists",65535,"Test");
         }
-
-        [TestMethod]
-        public void TestConnectionValidEndpoint()
-        {
-            Program p = new Program();
-            Program.MyChatClient("localhost", 8181, "Test");
-        }
-
     }
 }
