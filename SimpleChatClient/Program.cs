@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace SimpleChatClient
 {
-    class Program
+    public class Program
     {
         // TCPClient example https://docs.microsoft.com/ru-ru/dotnet/api/system.net.sockets.tcpclient?view=netframework-4.7.2
-        static void MyChatClient(String server, Int32 port, String message)
+        public static void MyChatClient(String server, Int32 port, String message)
         {
             try
             {
@@ -46,19 +46,21 @@ namespace SimpleChatClient
             catch (ArgumentNullException e)
             {
                 Console.WriteLine("ArgumentNullException: {0}", e);
+                throw e;
             }
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);
+                throw e;
             }
 
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
+            //Console.WriteLine("\n Press Enter to continue...");
+            //Console.Read();
         }
 
         static void Main(string[] args)
         {
-            MyChatClient("localhost", 8181, "Hi chat!  I'm a new user!");
+            MyChatClient("localhost", 8081, "Hi chat!  I'm a new user!");
         }
     }
 }
