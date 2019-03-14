@@ -13,7 +13,7 @@ namespace SimpleChatUnitTests
         public void Test_Connecting_To_Bad_Server()
         {
             Program p = new Program();
-            Program.MyChatClient("localhost_doesnot_exists",65535,"Test");
+            Program.MyChatClient("localhost_doesnot_exist",65535,"Test");
         }
     }
 }
