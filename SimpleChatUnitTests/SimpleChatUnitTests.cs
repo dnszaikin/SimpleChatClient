@@ -19,7 +19,7 @@ namespace SimpleChatUnitTests
     public class BigUnitTest
     {
         [TestMethod]
-        [ExpectedException(typeof(SocketException))]
+        //[ExpectedException(typeof(SocketException))]
         public void Test_Connecting_To_Bad_Server()
         {
             MyChatClient client = new MyChatClient("localhost_doesnot_exist", 65535);
