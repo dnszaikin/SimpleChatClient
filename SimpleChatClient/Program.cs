@@ -10,14 +10,27 @@ namespace SimpleChatClient
 {
     public class Program
     {
-        static bool threadStart = false;
-        public static void MyChatClient(String server, Int32 port)
+        public interface IChatClient
         {
-            try {
-                TcpClient client = new TcpClient(server, port);
-                String message = String.Empty;
-                NetworkStream stream = client.GetStream();         
-                Thread responeThread = new Thread(() => {
+            void connect();
+            void disconnect();
+            void sendMessage(string message);
+        }
+        public class MyChatClient : IChatClient {
+            bool threadStart = false;
+            Thread responeThread;
+            public TcpClient tcpClient { get; set; }
+            public NetworkStream stream { get; set; }
+            public String server { get; set;  }
+            public Int32 port { get; set;  }
+            public MyChatClient() { }
+            public MyChatClient(String server, Int32 port) {
+                this.server = server;
+                this.port = port;
+                tcpClient = new TcpClient();
+            }
+            private void listen() {
+                responeThread = new Thread(() => {
                     threadStart = true;
                     while (threadStart) {
                         Byte[] data = new Byte[256];
@@ -26,35 +39,44 @@ namespace SimpleChatClient
                             Int32 bytes = stream.Read(data, 0, data.Length);
                             responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
                             Console.WriteLine("Received: {0}", responseData);
-                        } else {
+                        }
+                        else {
                             Thread.Sleep(100);
-                        }                        
+                        }
                     }
                 });
                 responeThread.Start();
-                while (message != "bye!") {
-                    message = Console.ReadLine();
-                    Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
-                    stream.Write(data, 0, data.Length);
-                }
+            }
+            public void connect() {
+                tcpClient.Connect(server, port);
+                stream = tcpClient.GetStream();
+                listen();
+            }
+            public void sendMessage(string message) {
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                stream.Write(data, 0, data.Length);
+            }
+            public void disconnect() {
                 threadStart = false;
                 responeThread.Join();
                 stream.Close();
-                client.Close();
+                tcpClient.Close();
             }
-            catch (ArgumentNullException e) {
-                Console.WriteLine("ArgumentNullException: {0}", e);
-                throw e;
-            }
-            catch (SocketException e) {
-                Console.WriteLine("SocketException: {0}", e);
-                throw e;
+            ~MyChatClient() {
+                disconnect();
             }
         }
 
         static void Main(string[] args)
         {
-            MyChatClient("10.44.1.234", 8181);
+            MyChatClient client = new MyChatClient("localhost", 8181);
+            client.connect();
+            String message = String.Empty;
+            //while (message != "bye!") {
+            //    message = Console.ReadLine();
+            //    client.sendMessage(message);
+            //}
+            client.disconnect();
             Console.WriteLine("\nPress Enter to exit...");
             Console.Read();
         }
