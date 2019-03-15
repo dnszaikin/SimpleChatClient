@@ -64,6 +64,7 @@ namespace SimpleChatClient
             }
             ~MyChatClient() {
                 disconnect();
+
             }
         }
 
@@ -72,10 +73,10 @@ namespace SimpleChatClient
             MyChatClient client = new MyChatClient("localhost", 8181);
             client.connect();
             String message = String.Empty;
-            //while (message != "bye!") {
-            //    message = Console.ReadLine();
-            //    client.sendMessage(message);
-            //}
+            while (message != "bye!") {
+                message = Console.ReadLine();
+                client.sendMessage(message);
+            }
             client.disconnect();
             Console.WriteLine("\nPress Enter to exit...");
             Console.Read();
